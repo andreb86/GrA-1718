@@ -129,8 +129,13 @@ def plot_pdf(graph: networkx.Graph, log_b=True):
     k = numpy.fromiter(d.keys(), dtype=numpy.int)
     p = numpy.fromiter(
         map(lambda x: x / len(deg), d.values()),
+        # d.values(),
         dtype=numpy.float
     )
+    r = powerlaw.Fit(
+        numpy.fromiter(dict(deg).values(), dtype=numpy.float) / len(deg)
+    )
+    # p = p / len(deg)
     matplotlib.pyplot.loglog(k, p, 'ro', alpha=.3)
     matplotlib.pyplot.ylabel('p(k)')
     matplotlib.pyplot.xlabel('k')
@@ -140,9 +145,12 @@ def plot_pdf(graph: networkx.Graph, log_b=True):
         binned_p = [i['p_k'] for i in binned]
         matplotlib.pyplot.loglog(binned_k, binned_p, 'b+')
 
-    r = fit_powerlaw(graph)
-    pdf = scipy.power(k, -r.alpha) / scipy.special.zeta(r.alpha, r.xmin)
+    # pdf = scipy.power(k, -r.alpha) * scipy.power(r.xmin, r.alpha - 1) * (
+    #         r.alpha - 1
+    # )
+    pdf = scipy.power(k, -r.alpha) / scipy.special.zeta(r.xmin, r.alpha)
     matplotlib.pyplot.loglog(k, pdf, 'm')
+    # r.plot_pdf()
     matplotlib.pyplot.show()
 
 
@@ -156,12 +164,12 @@ def graph_from_edgelist(path_to_file: str, separator='\t') -> networkx.Graph:
     return networkx.read_edgelist(path_to_file, delimiter=separator)
 
 
-def log_binning(graph: networkx.Graph, base: int = 2):
+def log_binning(graph: networkx.Graph, base: int = 2) -> dict:
     """
     Bin the distribution according to a logarithmic law
     :param base: base of the logarithmic distribution
     :param graph: the Graph() object to study
-    :return:
+    :return bins: the dictionary of the bins
     """
     if base == 1:
         raise ValueError
@@ -174,7 +182,7 @@ def log_binning(graph: networkx.Graph, base: int = 2):
 
     bins = [
         {'n': 0, 'n*k': 0, 'avg_k': 0.0, 'p_k': 0.0}
-        for i in range(number_of_bins)
+        for _ in range(number_of_bins)
     ]
     for k in dist.keys():
         bins[int(scipy.logn(base, k))]['n'] += dist[k]
@@ -183,6 +191,7 @@ def log_binning(graph: networkx.Graph, base: int = 2):
     for i, _bin in enumerate(bins):
         _bin['avg_k'] = _bin['n*k'] / _bin['n']
         _bin['p_k'] = _bin['n'] / n / scipy.power(base, i)
+        # _bin['p_k'] = _bin['n'] / scipy.power(base, i)
 
     return bins
 
@@ -197,6 +206,40 @@ def random_failures(graph: networkx.Graph):
     par = par.round()
     networkx.set_node_attributes(graph, par, 'contagion')
 
+
+def density(graph: networkx.Graph):
+    """
+    Returns the density of a graph as L / N
+    :param graph: the graph which density is being calculated
+    :return: The density of the graph
+    """
+    L = graph.number_of_edges()
+    N = graph.number_of_nodes()
+    return 2 * L / (N * (N - 1))
+
+
+def failed(graph: networkx.Graph):
+    """
+    Return the the connected components if the network failed; else it will
+    return false.
+    :param graph: The graph to analyse
+    :return:
+    """
+    if networkx.is_connected(graph):
+        return False
+    else:
+        return (
+            graph.subgraph(comp)
+            for comp in networkx.strongly_connected_components(graph)
+        )
+
+
+def correlation(graph: networkx.Graph):
+    return networkx.correlation.degree_mixing_matrix(graph)
+
+
+def assortativity(graph: networkx.Graph):
+    return networkx.correlation.degree_assortativity_coefficient(graph)
 
 
 if __name__ == 'main':
