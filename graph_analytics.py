@@ -9,6 +9,7 @@ import matplotlib.pyplot
 import networkx
 import numpy
 import powerlaw
+import random
 import scipy, scipy.special
 
 
@@ -164,7 +165,7 @@ def graph_from_edgelist(path_to_file: str, separator='\t') -> networkx.Graph:
     return networkx.read_edgelist(path_to_file, delimiter=separator)
 
 
-def log_binning(graph: networkx.Graph, base: int = 2) -> dict:
+def log_binning(graph: networkx.Graph, base: int = 2) -> list:
     """
     Bin the distribution according to a logarithmic law
     :param base: base of the logarithmic distribution
@@ -202,20 +203,24 @@ def random_failures(graph: networkx.Graph):
     :param graph: networkx.Graph()
     :return:
     """
-    par = 1 + numpy.random.random_sample((1, graph.number_of_nodes()))
-    par = par.round()
-    networkx.set_node_attributes(graph, par, 'contagion')
+    while networkx.is_connected(graph):
+        rand_node = random.choice(graph.nodes)
+        print(f'Removing node: {rand_node}\n')
+        graph.remove_node(rand_node)
+    else:
+        print('The graph has failed!\n')
+        return failed(graph)
 
 
 def density(graph: networkx.Graph):
     """
-    Returns the density of a graph as L / N
+    Returns the density of a graph as L / N * (N - 1)
     :param graph: the graph which density is being calculated
     :return: The density of the graph
     """
-    L = graph.number_of_edges()
-    N = graph.number_of_nodes()
-    return 2 * L / (N * (N - 1))
+    l: int = graph.number_of_edges()
+    n: int = graph.number_of_nodes()
+    return 2 * l / (n * (n - 1))
 
 
 def failed(graph: networkx.Graph):
@@ -230,7 +235,7 @@ def failed(graph: networkx.Graph):
     else:
         return (
             graph.subgraph(comp)
-            for comp in networkx.strongly_connected_components(graph)
+            for comp in networkx.connected_components(graph)
         )
 
 
