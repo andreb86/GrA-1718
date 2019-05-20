@@ -2,15 +2,71 @@
 import sys
 
 # Sanity check on the python environment
-import argparse
-import collections
-import itertools
-import matplotlib.pyplot
-import networkx
-import numpy
-import powerlaw
-import random
-import scipy, scipy.special
+try:
+    import argparse
+    import collections
+    import itertools
+    import matplotlib.pyplot
+    import networkx
+    import numpy
+    import powerlaw
+    import random
+    import scipy, scipy.special
+except ImportError as ie:
+    print(f'Missing libraries: {ie}')
+    sys.exit(-1)
+
+
+class GraphAnalyser(networkx.Graph):
+    """
+    Graph analyser class.
+    It integrates the graph and directed graphs classes from networkx
+    """
+
+    def __init__(
+            self,
+            filename: str,
+            delimiter: str = '\t',
+            comments: str = '#',
+            encoding: str = 'utf-8',
+            directed: bool = False
+    ):
+        """
+        Initialise the graph as undirected/directed
+        :param directed: boolean saying whether the graph is directed or not
+        """
+        networkx.Graph.__init__(self)
+        if directed:
+            self.to_directed()
+
+        self.pdf = None
+        self.cdf = None
+        self.fit = None
+
+        with open(filename, 'rb') as edge_list:
+            for line in edge_list:
+                line = line.decode(encoding)
+                comm = line.find(comments)
+                if comm > 0:
+                    line = line[:comm]
+                else:
+                    continue
+                edge = line.strip().split(delimiter)
+                node_1 = edge.pop(0)
+                node_2 = edge.pop(0)
+                print(f'{node_1} - {node_2}\n')
+                edge_data = edge
+                if len(edge_data):
+                    try:
+                        edge_attrs = dict(eval(' '.join(edge_data)))
+                    except TypeError as te:
+                        print(
+                            f'{te}:\t\tImpossible to convert data for link' +
+                            f'{node_1} - {node_2}',
+                            file=sys.stderr
+                        )
+                        continue
+                self.add_edge(node_1, node_2, **edge_attrs)
 
 
 def degree_distribution(graph):
