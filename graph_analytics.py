@@ -11,10 +11,12 @@ try:
     import numpy
     import powerlaw
     import random
-    import scipy, scipy.special
+    import scipy
+    import scipy.special
+    import scipy.stats
+    # from type import List
 except ImportError as ie:
     print(f'Missing libraries: {ie}')
-    sys.exit(-1)
 
 
 class GraphAnalyser(networkx.Graph):
@@ -27,8 +29,6 @@ class GraphAnalyser(networkx.Graph):
             self,
             filename: str,
             delimiter: str = '\t',
-            comments: str = '#',
-            encoding: str = 'utf-8',
             directed: bool = False
     ):
         """
@@ -39,34 +39,108 @@ class GraphAnalyser(networkx.Graph):
         if directed:
             self.to_directed()
 
-        self.pdf = None
+        with open(filename) as f:
+            edgelist = list(
+                map(lambda s: s.strip().split(delimiter), f.readlines())
+            )
+        self.add_edges_from(edgelist)
+        self.pmf = None
         self.cdf = None
         self.fit = None
+        self.average_degree = 0
+        self.connected_components = 0
+        self.is_connected = False
+        self.diameter = 0
 
-        with open(filename, 'rb') as edge_list:
-            for line in edge_list:
-                line = line.decode(encoding)
-                comm = line.find(comments)
-                if comm > 0:
-                    line = line[:comm]
-                else:
-                    continue
-                edge = line.strip().split(delimiter)
-                node_1 = edge.pop(0)
-                node_2 = edge.pop(0)
-                print(f'{node_1} - {node_2}\n')
-                edge_data = edge
-                if len(edge_data):
-                    try:
-                        edge_attrs = dict(eval(' '.join(edge_data)))
-                    except TypeError as te:
-                        print(
-                            f'{te}:\t\tImpossible to convert data for link' +
-                            f'{node_1} - {node_2}',
-                            file=sys.stderr
-                        )
-                        continue
-                self.add_edge(node_1, node_2, **edge_attrs)
+    def __pmf(self, normalised: bool = False):
+        """
+        Calculate the PMF of the degree distribution
+        :param normalised: If true the histogram is normalised
+        :return:
+        """
+        try:
+            self.pmf = numpy.array(
+                networkx.degree_histogram(self),
+                dtype=numpy.float
+            )
+            if normalised:
+                self.pmf /= self.number_of_nodes()
+        except Exception as e:
+            print(f'Impossible to calculate PDF: {e}')
+
+    def __cdf(self):
+        """
+        Calculate the CDF of the degree distribution
+        :return:
+        """
+        try:
+            self.cdf = numpy.fromiter(
+                itertools.accumulate(self.pmf),
+                dtype=numpy.float
+            )
+        except Exception as e:
+            print(f'Impossible to calculate CDF: {e}')
+
+    def __avg_deg(self, verbose: bool = False):
+        """
+        Calculate the average degree
+        :param verbose: Print the average degree if required
+        :return:
+        """
+        self.average_degree = sum(networkx.degree_histogram(self)) / \
+                              self.number_of_nodes()
+        if verbose:
+            print(f'Average Degree: {self.average_degree: 6.2f}')
+
+    def __conn(self, verbose: bool = False):
+        self.is_connected = networkx.is_connected(self)
+        self.connected_components = networkx.number_connected_components(self)
+        if verbose:
+            print(
+                f'Found {self.connected_components: d} connected components.'
+            )
+
+    def __dia(self):
+        large = next(
+            self.subgraph(c)
+            for c in networkx.strongly_connected_components(self)
+        )
+        self.diameter = networkx.diameter(large)
+
+    def analyse(self, normalised: bool = False):
+        """
+        Analyse the graph and calculate the main statistics
+        :return:
+        """
+        self.__pmf(normalised)
+        self.__cdf()
+        self.__avg_deg()
+
+
+    # def plot(self, plot_type: str, attrs, markers):
+    #     """
+    #     Plot the required
+    #     :param plot_type: the type of the plot
+    #     :param attrs: the attributes to be shown on the plot
+    #     :param markers: the markers to be used for the plots
+    #     :return:
+    #     """
+    #     try:
+    #         plotfun = eval(f'matplotlib.pyplot.{plot_type}')
+    #     except AttributeError:
+    #         print(
+    #             f'{plot_type} is not a legal matplotlib function',
+    #             file=sys.stderr
+    #         )
+    #     try:
+    #         if isinstance(attrs, str):
+    #             var = dict(self.__getattribute__(attrs))
+    #             x = var.keys()
+    #             y = var.values()
+    #             plotfun(x, y, markers)
+    #         elif isinstance(attrs, list) || isinstance(attrs, tuple):
+    #             if all(map(lambda s: isinstance(s, tuple), attrs)):
+    #                 for t in attrs:
 
 
 def degree_distribution(graph):
