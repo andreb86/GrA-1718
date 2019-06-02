@@ -2,6 +2,7 @@
   <dictionary name="andrea">
     <words>
       <w>assortativity</w>
+      <w>betweenness</w>
       <w>edgelist</w>
       <w>networkx</w>
       <w>powerlaw</w>

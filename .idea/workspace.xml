@@ -2,16 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="69be7218-6787-415a-a3ad-fbef47e50144" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/PAs.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/andrea.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pa01.gephi_temp1536612234420" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/PAs.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PAs.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/andrea.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/andrea.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/graph_analytics.py" beforeDir="false" afterPath="$PROJECT_DIR$/graph_analytics.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -39,12 +33,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/graph_analytics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="237" column="53" selection-start-line="237" selection-start-column="53" selection-end-line="237" selection-end-column="53" />
-              <folding>
-                <element signature="e#23#33#0" expanded="true" />
-                <marker date="1557868038079" expanded="true" signature="6066:7349" ph="..." />
-              </folding>
+            <state relative-caret-position="666">
+              <caret line="175" lean-forward="true" selection-start-line="175" selection-end-line="175" />
             </state>
           </provider>
         </entry>
@@ -89,11 +79,13 @@
       </profile-state>
     </entry>
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -101,18 +93,22 @@
               <item name="PAs" type="b2602c69:ProjectViewProjectNode" />
               <item name="PAs" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="PAs" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PAs" type="462c0819:PsiDirectoryNode" />
+              <item name="graphs" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -174,6 +170,9 @@
       <workItem from="1557503365194" duration="12783000" />
       <workItem from="1557653569090" duration="467000" />
       <workItem from="1557654740418" duration="23342000" />
+      <workItem from="1559245132116" duration="3350000" />
+      <workItem from="1559333669870" duration="5977000" />
+      <workItem from="1559457316111" duration="15941000" />
     </task>
     <task id="LOCAL-00001" summary="Analytics:&#10;First part completed. Main metrics included. To be reviewed and discuss if anything is missing by any chance.">
       <created>1557781108277</created>
@@ -186,16 +185,16 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46695000" />
+    <option name="totallyTimeSpent" value="72313000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="34" width="1920" height="1012" extended-state="6" />
+    <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" x="430" y="85" width="200" height="612" id="Project" order="0" visible="true" weight="0.15069222" />
+      <window_info content_ui="combo" x="430" y="85" width="200" height="612" id="Project" order="0" visible="true" weight="0.16027689" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.24956064" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32969433" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -205,17 +204,17 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.3298969" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.4183124" side_tool="true" weight="0.47793326" />
-      <window_info anchor="bottom" x="0" y="211" width="1036" height="657" id="SciView" order="11" sideWeight="0.5816876" type="WINDOWED" weight="0.47793326" />
+      <window_info anchor="bottom" x="0" y="295" width="1156" height="633" id="SciView" order="11" sideWeight="0.5816876" type="WINDOWED" weight="0.47793326" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="R Graphics" order="3" />
       <window_info anchor="right" id="R Packages" order="4" />
       <window_info anchor="right" id="Database" order="5" weight="0.32967034" />
-      <window_info anchor="right" x="0" y="0" width="96" height="853" id="Documentation" order="6" side_tool="true" weight="0.32844037" />
+      <window_info anchor="right" x="0" y="0" width="96" height="853" id="Documentation" order="6" sideWeight="0.5032751" side_tool="true" visible="true" weight="0.46166134" />
       <window_info anchor="right" id="PlantUML" order="7" />
       <window_info anchor="right" auto_hide="true" x="950" y="76" width="970" height="970" id="Terminal" order="8" sideWeight="0.49924013" weight="0.456869" />
-      <window_info active="true" anchor="right" x="953" y="76" width="957" height="970" id="Python Console" order="9" sideWeight="0.49924013" visible="true" weight="0.5063898" />
+      <window_info active="true" anchor="right" x="953" y="76" width="957" height="970" id="Python Console" order="9" sideWeight="0.4967249" visible="true" weight="0.46166134" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -227,21 +226,11 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file:///usr/lib/python3/dist-packages/scipy/stats/_distn_infrastructure.py" />
-    <entry file="file://$USER_HOME$/miniconda3/envs/GA/lib/python3.7/site-packages/powerlaw.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="699" selection-start-line="699" selection-end-line="699" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/miniconda3/envs/GA/lib/python3.7/site-packages/powerlaw.py" />
     <entry file="file://$PROJECT_DIR$/graph_analytics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="237" column="53" selection-start-line="237" selection-start-column="53" selection-end-line="237" selection-end-column="53" />
-          <folding>
-            <element signature="e#23#33#0" expanded="true" />
-            <marker date="1557868038079" expanded="true" signature="6066:7349" ph="..." />
-          </folding>
+        <state relative-caret-position="666">
+          <caret line="175" lean-forward="true" selection-start-line="175" selection-end-line="175" />
         </state>
       </provider>
     </entry>
