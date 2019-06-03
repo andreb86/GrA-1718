@@ -14,11 +14,14 @@ try:
     from itertools import accumulate
     from scipy.special import zeta
     from scipy.stats import powerlaw
+    from scipy.stats import poisson
     from scipy.stats import kstest
     from time import time
     # from type import List
 except ImportError as ie:
     print(f'Missing libraries: {ie}')
+except:
+    print("Something went wrong!!!")
 
 
 class GraphAnalyser(networkx.Graph):
@@ -49,6 +52,7 @@ class GraphAnalyser(networkx.Graph):
             )
         self.add_edges_from(edgelist)
         self.pmf = None
+        self.binned_pmf = None
         self.cdf = None
         self.fit = None
         self.average_degree = 0
@@ -70,6 +74,7 @@ class GraphAnalyser(networkx.Graph):
             )
             if normalise:
                 self.pmf /= self.pmf.sum()
+            self.binned_pmf = scipy
         except (TypeError, ZeroDivisionError) as e:
             print(f'Impossible to calculate PMF: {e}')
 
@@ -108,8 +113,13 @@ class GraphAnalyser(networkx.Graph):
             )
 
     def __bet(self):
-        self.betweenness = networkx.betweenness_centrality(
-            self, normalized=True
+        self.betweenness = sorted(
+            networkx.betweenness_centrality(
+                self,
+                normalized=True
+            ),
+            key=lambda x: x[1],
+            reverse=True
         )
 
     def component(self, idx: int = 0, in_place: bool = False):
@@ -150,8 +160,9 @@ class GraphAnalyser(networkx.Graph):
         self.__cdf()
         self.__avg_deg()
         self.__conn()
+        self.__bet()
 
-    def attack(self, mode: str='random'):
+    def attack(self, mode: str = 'random'):
         """
         Attack the network by deleting the nodes
         :param mode: The attack mode. Possible values are 'random' or
@@ -163,21 +174,22 @@ class GraphAnalyser(networkx.Graph):
 
         if mode == 'random':
             numpy.random.seed(time())
-            nodes_list = list(self.nodes)
-            numpy.random.shuffle(nodes_list)
-            for node in nodes_list:
-                print(f"Removing node {node: s}")
-                if networkx.is_connected(cc):
+            while networkx.is_connected(cc):
+                cc.remove_node(numpy.random.choice(cc.nodes))
+            else:
+                print("The largest component of the graph has failed!")
+        elif mode == 'betweenness':
+            for node in self.betweenness:
+                print(f"Removing node: {node: s}")
+                if networkx.is_connected():
                     cc.remove_node(node)
                 else:
-                    print("The largest connected component has failed.")
-                    break
-        elif mode == 'betweenness':
-
-
-
-
-
+                    print(
+                        "The largest connected component has failed.",
+                        file=sys.stderr
+                    )
+        else:
+            raise ValueError("Unexpected attack mode!")
 
     # TODO encapsulate the method into a fit and make it "private"
     def k_min(self):
