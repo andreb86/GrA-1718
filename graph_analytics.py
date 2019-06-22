@@ -8,12 +8,12 @@ try:
     import matplotlib.pyplot
     import networkx
     import numpy
-    #import powerlaw
+    import powerlaw
     import random
     import scipy
     from itertools import accumulate
     from scipy.special import zeta
-    from scipy.stats import powerlaw
+    # from scipy.stats import powerlaw
     from scipy.stats import poisson
     from scipy.stats import kstest
     from time import time
@@ -64,7 +64,7 @@ class GraphAnalyser(networkx.Graph):
     def __pmf(self, normalise: bool = True):
         """
         Calculate the PMF of the degree distribution
-        :param normalise: If true the histogram is normalised
+        :param normalise: If true the histogram is normalised to unity
         :return:
         """
         try:
@@ -136,7 +136,7 @@ class GraphAnalyser(networkx.Graph):
         if idx > self.connected_components:
             print("The requested component does not exist", file=sys.stderr)
             raise IndexError
-        cl = networkx.strongly_connected_components(self)
+        cl = networkx.connected_components(self)
         count = 0
         for nodes_set in cl:
             if in_place:
@@ -145,6 +145,7 @@ class GraphAnalyser(networkx.Graph):
             else:
                 if count == idx:
                     sub_graph = networkx.subgraph(self, nodes_set)
+                    break
             count += 1
         if in_place:
             return self
@@ -160,7 +161,7 @@ class GraphAnalyser(networkx.Graph):
         self.__cdf()
         self.__avg_deg()
         self.__conn()
-        self.__bet()
+        # self.__bet()
 
     def attack(self, mode: str = 'random'):
         """
@@ -191,19 +192,16 @@ class GraphAnalyser(networkx.Graph):
         else:
             raise ValueError("Unexpected attack mode!")
 
-    # TODO encapsulate the method into a fit and make it "private"
-    def k_min(self):
+    def power_fit(self):
         """
-        Find the Kmin parameter of the distribution
-        :return: the Kmin parameter
+        Find approximate gamma and kmin values for the distribution
+        :return:
         """
-        dist = []
-        for (k, h) in enumerate(self.pmf):
-            if k:
-                gamma = 1 + \
-                        self.number_of_nodes() / \
-                        numpy.sum(numpy.log(self.pmf / (k - 1 / 2)))
-                # Calculate the auxiliary variable for the KS test
-                x = 1 / (zeta(gamma, k) * self.degree)
-                d = kstest(x, 'powerlaw', gamma)
-                dist.append(d.statistic)
+        # k = numpy.arange(1, len(self.pmf))
+        # N = self.number_of_nodes()
+        # ln_k = numpy.log(k)
+        # ln_sum =
+        # deg = numpy.fromiter(dict(self.degree).values(), dtype=numpy.float)
+        # fit = powerlaw.Fit(deg)
+        # kmin = fit.xmin
+        # gamma = 1 + N / ()
