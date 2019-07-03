@@ -8,12 +8,12 @@ try:
     import matplotlib.pyplot
     import networkx
     import numpy
-    import powerlaw
+    # import powerlaw
     import random
     import scipy
     from itertools import accumulate
     from scipy.special import zeta
-    # from scipy.stats import powerlaw
+    from scipy.stats import powerlaw
     from scipy.stats import poisson
     from scipy.stats import kstest
     from time import time
@@ -122,12 +122,12 @@ class GraphAnalyser(networkx.Graph):
             reverse=True
         )
 
-    def component(self, idx: int = 0, in_place: bool = False):
+    def component(self, idx: int = 0):
         """
         Return the component referenced by the index
         :param idx: index of the component the graph in the component list.
         Default to the largest component.
-        :param in_place: if True the graph is shrunk to the desired component
+        :param crop: if True the graph is shrunk to the desired component
         :return:
         """
         if self.connected_components == 0:
@@ -136,21 +136,11 @@ class GraphAnalyser(networkx.Graph):
         if idx > self.connected_components:
             print("The requested component does not exist", file=sys.stderr)
             raise IndexError
-        cl = networkx.connected_components(self)
-        count = 0
-        for nodes_set in cl:
-            if in_place:
-                if count != idx:
-                    self.remove_nodes_from(nodes_set)
-            else:
-                if count == idx:
-                    sub_graph = networkx.subgraph(self, nodes_set)
-                    break
-            count += 1
-        if in_place:
-            return self
-        else:
-            return sub_graph
+        cl = list(networkx.connected_components(self))
+        for i, nset in enumerate(cl):
+            if i != idx:
+                self.remove_nodes_from(nset)
+        self.analyse()
 
     def analyse(self, normalised: bool = True):
         """
