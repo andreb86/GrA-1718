@@ -60,6 +60,9 @@ class GraphAnalyser(networkx.Graph):
         self.is_connected = False
         self.diameter = 0
         self.betweenness = None
+        self.hubs = None
+        self.authorities = None
+        self.diameter = 0
 
     def __pmf(self, normalise: bool = True):
         """
@@ -113,6 +116,10 @@ class GraphAnalyser(networkx.Graph):
             )
 
     def __bet(self):
+        """
+        Calculate the betweenness of the graph
+        :return:
+        """
         self.betweenness = sorted(
             networkx.betweenness_centrality(
                 self,
@@ -122,14 +129,51 @@ class GraphAnalyser(networkx.Graph):
             reverse=True
         )
 
+    def __hits(self):
+        """
+        Determine the hub and authority of each node in the graph and sort
+        them based on their HITS score (hubs and authorities)
+        :return:
+        """
+        tmp = networkx.hits(self)
+        self.hubs = sorted(tmp[0].items(), key=lambda x: x[1], reverse=True)
+        self.authorities = sorted(
+            tmp[1].items(),
+            key=lambda x: x[1],
+            reverse=True
+        )
+
+    def __clu(self):
+        """
+        Determine the clustering coefficient of every node of the graph and
+        sort them accordingly
+        :return:
+        """
+        self.clustering = sorted(
+            networkx.clustering(self).items(),
+            key=lambda x: x[1],
+            reverse=True
+        )
+
+    def __clo(self):
+        """
+        Determine the closeness of each node and sort them accordingly
+        :return:
+        """
+        self.closeness = sorted(
+            networkx.closeness_centrality(self).items(),
+            key=lambda x: x[1],
+            reverse=True
+        )
+
     def component(self, idx: int = 0):
         """
         Return the component referenced by the index
         :param idx: index of the component the graph in the component list.
         Default to the largest component.
-        :param crop: if True the graph is shrunk to the desired component
         :return:
         """
+        self.__conn()
         if self.connected_components == 0:
             print("Please analyse graph first.", file=sys.stderr)
             raise ValueError
@@ -151,6 +195,10 @@ class GraphAnalyser(networkx.Graph):
         self.__cdf()
         self.__avg_deg()
         self.__conn()
+        self.__hits()
+        # self.__clo()
+        self.__clu()
+        # self.diameter = networkx.diameter(self)
         # self.__bet()
 
     def attack(self, mode: str = 'random'):
@@ -160,27 +208,34 @@ class GraphAnalyser(networkx.Graph):
         'betweenness'
         :return: None
         """
-        # Fetch the biggest connected component
-        cc = self.component(0)
 
+        diam = []
+        sizes = []
+        avg_k = []
+        f = numpy.linspace(0, 1, self.number_of_nodes())
+        nodes = None
         if mode == 'random':
+            nodes = numpy.asarray(self.nodes)
             numpy.random.seed(time())
-            while networkx.is_connected(cc):
-                cc.remove_node(numpy.random.choice(cc.nodes))
-            else:
-                print("The largest component of the graph has failed!")
+            numpy.random.shuffle(nodes)
         elif mode == 'betweenness':
-            for node in self.betweenness:
-                print(f"Removing node: {node: s}")
-                if networkx.is_connected():
-                    cc.remove_node(node)
-                else:
-                    print(
-                        "The largest connected component has failed.",
-                        file=sys.stderr
-                    )
+            nodes = numpy.asarray(list(zip(*self.betweenness))[0])
+        elif mode == 'closeness':
+            nodes = numpy.asarray(list(zip(*self.closeness))[0])
+        elif mode == 'hubs':
+            nodes = numpy.asarray(list(zip(*self.hubs))[0])
+        elif mode == 'clustering':
+            nodes = numpy.asarray(list(zip(*self.clustering))[0])
         else:
             raise ValueError("Unexpected attack mode!")
+
+        # TODO
+        # Remove every node in the order specified by the attack mode
+        for node in nodes:
+            try:
+                self.remove_node(node)
+            except networkx.NetworkXError:
+                continue
 
     def power_fit(self):
         """
