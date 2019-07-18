@@ -120,14 +120,14 @@ class GraphAnalyser(networkx.Graph):
         Calculate the betweenness of the graph
         :return:
         """
-        self.betweenness = sorted(
+        self.betweenness = dict(sorted(
             networkx.betweenness_centrality(
                 self,
                 normalized=True
             ),
             key=lambda x: x[1],
             reverse=True
-        )
+        ))
 
     def __hits(self):
         """
@@ -136,12 +136,15 @@ class GraphAnalyser(networkx.Graph):
         :return:
         """
         tmp = networkx.hits(self)
-        self.hubs = sorted(tmp[0].items(), key=lambda x: x[1], reverse=True)
-        self.authorities = sorted(
+        self.hubs = dict(sorted(
+            tmp[0].items(), key=lambda x: x[1],
+            reverse=True
+        ))
+        self.authorities = dict(sorted(
             tmp[1].items(),
             key=lambda x: x[1],
             reverse=True
-        )
+        ))
 
     def __clu(self):
         """
@@ -149,27 +152,28 @@ class GraphAnalyser(networkx.Graph):
         sort them accordingly
         :return:
         """
-        self.clustering = sorted(
+        self.clustering = dict(sorted(
             networkx.clustering(self).items(),
             key=lambda x: x[1],
             reverse=True
-        )
+        ))
 
     def __clo(self):
         """
         Determine the closeness of each node and sort them accordingly
         :return:
         """
-        self.closeness = sorted(
+        self.closeness = dict(sorted(
             networkx.closeness_centrality(self).items(),
             key=lambda x: x[1],
             reverse=True
-        )
+        ))
 
-    def component(self, idx: int = 0):
+    def component(self, idx: int = 0, in_place: bool = True):
         """
         Return the component referenced by the index
         :param idx: index of the component the graph in the component list.
+        :param in_place: True if the subgraph operation must happen in place
         Default to the largest component.
         :return:
         """
@@ -180,11 +184,15 @@ class GraphAnalyser(networkx.Graph):
         if idx > self.connected_components:
             print("The requested component does not exist", file=sys.stderr)
             raise IndexError
-        cl = list(networkx.connected_components(self))
-        for i, nset in enumerate(cl):
-            if i != idx:
-                self.remove_nodes_from(nset)
-        self.analyse()
+        components_list = list(networkx.connected_components(self))
+        if in_place:
+            for i, nset in enumerate(components_list):
+                if i != idx:
+                    self.remove_nodes_from(nset)
+            self.analyse()
+        else:
+            sub: networkx.Graph = networkx.Graph(self)
+            return sub.subgraph(components_list[idx])
 
     def analyse(self, normalised: bool = True):
         """
@@ -196,16 +204,16 @@ class GraphAnalyser(networkx.Graph):
         self.__avg_deg()
         self.__conn()
         self.__hits()
-        # self.__clo()
         self.__clu()
+        # self.__clo()
         # self.diameter = networkx.diameter(self)
         # self.__bet()
 
     def attack(self, mode: str = 'random'):
         """
         Attack the network by deleting the nodes
-        :param mode: The attack mode. Possible values are 'random' or
-        'betweenness'
+        :param mode: The attack mode. Possible values are 'random',
+        'betweenness', 'closeness', 'hubs' or 'clustering'
         :return: None
         """
 
@@ -219,13 +227,13 @@ class GraphAnalyser(networkx.Graph):
             numpy.random.seed(time())
             numpy.random.shuffle(nodes)
         elif mode == 'betweenness':
-            nodes = numpy.asarray(list(zip(*self.betweenness))[0])
+            nodes = numpy.asarray(self.betweenness.keys())
         elif mode == 'closeness':
-            nodes = numpy.asarray(list(zip(*self.closeness))[0])
+            nodes = numpy.asarray(self.closeness.keys())
         elif mode == 'hubs':
-            nodes = numpy.asarray(list(zip(*self.hubs))[0])
+            nodes = numpy.asarray(self.hubs.keys())
         elif mode == 'clustering':
-            nodes = numpy.asarray(list(zip(*self.clustering))[0])
+            nodes = numpy.asarray(self.clustering.keys())
         else:
             raise ValueError("Unexpected attack mode!")
 
