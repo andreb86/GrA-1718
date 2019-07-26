@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="69be7218-6787-415a-a3ad-fbef47e50144" name="Default Changelist" comment="Reduction into components completed">
-      <change beforePath="$PROJECT_DIR$/.idea/PAs.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PAs.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="69be7218-6787-415a-a3ad-fbef47e50144" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/graph_analytics.py" beforeDir="false" afterPath="$PROJECT_DIR$/graph_analytics.py" afterDir="false" />
     </list>
@@ -32,8 +30,17 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/graph_analytics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="196" column="9" selection-start-line="196" selection-start-column="9" selection-end-line="196" selection-end-column="21" />
+            <state relative-caret-position="740">
+              <caret line="263" column="48" selection-start-line="263" selection-start-column="48" selection-end-line="263" selection-end-column="48" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/miniconda3/envs/GA/lib/python3.7/site-packages/networkx/classes/graph.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="25695">
+              <caret line="1723" selection-start-line="1723" selection-end-line="1723" />
             </state>
           </provider>
         </entry>
@@ -57,9 +64,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="34" />
-    <option name="width" value="960" />
-    <option name="height" value="1012" />
+    <option name="x" value="391" />
+    <option name="y" value="-9" />
+    <option name="width" value="882" />
+    <option name="height" value="1053" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -83,25 +91,7 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="GrA-1718" type="b2602c69:ProjectViewProjectNode" />
-              <item name="GrA-1718" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="GrA-1718" type="b2602c69:ProjectViewProjectNode" />
-              <item name="GrA-1718" type="462c0819:PsiDirectoryNode" />
-              <item name="graphs" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
@@ -175,7 +165,16 @@
       <workItem from="1559497568711" duration="129000" />
       <workItem from="1559593166717" duration="4501000" />
       <workItem from="1562187280332" duration="6594000" />
-      <workItem from="1562251800255" duration="8898000" />
+      <workItem from="1562251800255" duration="9066000" />
+      <workItem from="1562705418875" duration="686000" />
+      <workItem from="1562706130636" duration="822000" />
+      <workItem from="1562708420368" duration="3085000" />
+      <workItem from="1562797308762" duration="1075000" />
+      <workItem from="1563030082764" duration="9080000" />
+      <workItem from="1563221348045" duration="1259000" />
+      <workItem from="1563489468519" duration="3130000" />
+      <workItem from="1563907901572" duration="4209000" />
+      <workItem from="1564080980202" duration="9099000" />
     </task>
     <task id="LOCAL-00001" summary="Analytics:&#10;First part completed. Main metrics included. To be reviewed and discuss if anything is missing by any chance.">
       <created>1557781108277</created>
@@ -198,17 +197,31 @@
       <option name="project" value="LOCAL" />
       <updated>1562195058779</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="TODO:&#10;Complete attack function to include different behaviours for the failure of the giant components">
+      <created>1562262397339</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1562262397339</updated>
+    </task>
+    <task id="LOCAL-00005" summary="COMPONENT STUDY:&#10;Function updated to return a copy of the selected component if required.&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required.">
+      <created>1563493052209</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1563493052209</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="92435000" />
+    <option name="totallyTimeSpent" value="125048000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="-22" width="1922" height="1079" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" x="430" y="85" width="200" height="612" id="Project" order="0" visible="true" weight="0.14727855" />
+      <window_info content_ui="combo" x="430" y="85" width="200" height="612" id="Project" order="0" weight="0.32922733" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.24956064" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -232,7 +245,7 @@
       <window_info anchor="right" x="0" y="0" width="96" height="853" id="Documentation" order="6" sideWeight="0.50545853" side_tool="true" visible="true" weight="0.46166134" />
       <window_info anchor="right" id="PlantUML" order="7" />
       <window_info anchor="right" auto_hide="true" x="950" y="76" width="970" height="970" id="Terminal" order="8" sideWeight="0.49924013" weight="0.456869" />
-      <window_info active="true" anchor="right" x="953" y="76" width="957" height="970" id="Python Console" order="9" sideWeight="0.4945415" visible="true" weight="0.4370331" />
+      <window_info active="true" anchor="right" x="536" y="13" width="1371" height="296" id="Python Console" order="9" sideWeight="0.4945415" visible="true" weight="0.6152615" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -242,15 +255,31 @@
     <MESSAGE value="Analytics:&#10;First part completed. Main metrics included. To be reviewed and discuss if anything is missing by any chance." />
     <MESSAGE value="TODO:&#10;Finish the betweenness calculation and the attacks." />
     <MESSAGE value="Reduction into components completed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Reduction into components completed" />
+    <MESSAGE value="TODO:&#10;Complete attack function to include different behaviours for the failure of the giant components" />
+    <MESSAGE value="COMPONENT STUDY:&#10;Function updated to return a copy of the selected component if required.&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required." />
+    <option name="LAST_COMMIT_MESSAGE" value="COMPONENT STUDY:&#10;Function updated to return a copy of the selected component if required.&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file:///usr/lib/python3/dist-packages/scipy/stats/_distn_infrastructure.py" />
     <entry file="file://$USER_HOME$/miniconda3/envs/GA/lib/python3.7/site-packages/powerlaw.py" />
+    <entry file="file://$USER_HOME$/miniconda3/envs/GA/lib/python3.7/site-packages/networkx/classes/graphviews.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="310">
+          <caret line="86" selection-start-line="86" selection-end-line="86" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/graph_analytics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="196" column="9" selection-start-line="196" selection-start-column="9" selection-end-line="196" selection-end-column="21" />
+        <state relative-caret-position="740">
+          <caret line="263" column="48" selection-start-line="263" selection-start-column="48" selection-end-line="263" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/miniconda3/envs/GA/lib/python3.7/site-packages/networkx/classes/graph.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25695">
+          <caret line="1723" selection-start-line="1723" selection-end-line="1723" />
         </state>
       </provider>
     </entry>

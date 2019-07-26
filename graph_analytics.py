@@ -5,6 +5,7 @@ import sys
 try:
     import argparse
     import collections
+    from copy import deepcopy
     import matplotlib.pyplot
     import networkx
     import numpy
@@ -244,6 +245,23 @@ class GraphAnalyser(networkx.Graph):
                 self.remove_node(node)
             except networkx.NetworkXError:
                 continue
+
+    def load_attributes(self, filename: str):
+        """
+        Load the nodes attributes for the contagion
+        :param filename: The attributes to be loaded into the nodes
+        :return:
+        """
+        with open(filename, 'r') as attributes:
+            for line in attributes:
+                try:
+                    attr = line.split()
+                    node = attr[0]
+                    name = attr[1]
+                    val = attr[2]
+                    self.nodes[node][name] = val
+                except:
+                    print('Something went wrong!')
 
     def power_fit(self):
         """
