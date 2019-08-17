@@ -31,27 +31,39 @@ class GraphAnalyser(networkx.Graph):
     It integrates the graph and directed graphs classes from networkx
     """
 
-    def __init__(
-            self,
-            filename: str,
-            delimiter: str = '\t',
-            directed: bool = False
-    ):
+    def __init__(self, *args, **kwargs, ):
         """
         Initialise the graph as undirected/directed
-        :param filename: the path to the edgelist
-        :param delimiter: the node separator
+        :param args: variable parameter
+        :param kwargs: keyword arguments
         :param directed: boolean saying whether the graph is directed or not
         """
         networkx.Graph.__init__(self)
-        if directed:
-            self.to_directed()
-
-        with open(filename) as f:
-            edgelist = list(
-                map(lambda s: s.strip().split(delimiter), f.readlines())
+        if not args:
+            pass
+        elif len(args) > 1:
+            print(
+                'The number of arguments provided is wrong!',
+                file=sys.stderr
             )
-        self.add_edges_from(edgelist)
+        else:
+            try:
+                filename: str = args[0]
+                try:
+                    delimiter: str = kwargs['delimiter']
+                except KeyError:
+                    delimiter: str = '\t'
+
+                with open(filename) as f:
+                    edgelist = list(
+                        map(lambda s: s.strip().split(delimiter), f.readlines())
+                    )
+
+                self.add_edges_from(edgelist)
+            except FileNotFoundError:
+                origin = args[0]
+                self.add_edges_from(origin.edges)
+
         self.pmf = None
         self.binned_pmf = None
         self.cdf = None
@@ -65,56 +77,17 @@ class GraphAnalyser(networkx.Graph):
         self.authorities = None
         self.diameter = 0
 
-    def __pmf(self, normalise: bool = True):
-        """
-        Calculate the PMF of the degree distribution
-        :param normalise: If true the histogram is normalised to unity
-        :return:
-        """
-        try:
-            self.pmf = numpy.array(
-                networkx.degree_histogram(self),
-                dtype=numpy.float
-            )
-            if normalise:
-                self.pmf /= self.pmf.sum()
-            self.binned_pmf = scipy
-        except (TypeError, ZeroDivisionError) as e:
-            print(f'Impossible to calculate PMF: {e}')
-
-    def __cdf(self):
-        """
-        Calculate the CDF of the degree distribution
-        :return:
-        """
-        try:
-            self.cdf = numpy.fromiter(accumulate(self.pmf), dtype=numpy.float)
-        except Exception as e:
-            print(f'Impossible to calculate CDF: {e}')
-
     def __avg_deg(self, verbose: bool = False):
         """
         Calculate the average degree
         :param verbose: Print the average degree if required
         :return:
         """
-        self.average_degree = sum(networkx.degree_histogram(self)) / \
-                              self.number_of_nodes()
+        hist = networkx.degree_histogram(self)
+        k = numpy.arange(len(hist))
+        self.average_degree = numpy.dot(k, hist) / self.number_of_nodes()
         if verbose:
             print(f'Average Degree: {self.average_degree: 6.2f}')
-
-    def __conn(self, verbose: bool = False):
-        """
-        Determine if the network is connected
-        :param verbose: if True prints the number of connected components
-        :return: None
-        """
-        self.is_connected = networkx.is_connected(self)
-        self.connected_components = networkx.number_connected_components(self)
-        if verbose:
-            print(
-                f'Found {self.connected_components: d} connected components.'
-            )
 
     def __bet(self):
         """
@@ -129,6 +102,64 @@ class GraphAnalyser(networkx.Graph):
             key=lambda x: x[1],
             reverse=True
         ))
+
+    def __cdf(self):
+        """
+        Calculate the CDF of the degree distribution
+        :return:
+        """
+        try:
+            self.cdf = numpy.fromiter(accumulate(self.pmf), dtype=numpy.float)
+        except Exception as e:
+            print(f'Impossible to calculate CDF: {e}')
+
+    def __clo(self):
+        """
+        Determine the closeness of each node and sort them accordingly
+        :return:
+        """
+        self.closeness = dict(sorted(
+            networkx.closeness_centrality(self).items(),
+            key=lambda x: x[1],
+            reverse=True
+        ))
+
+    def __clu(self):
+        """
+        Determine the clustering coefficient of every node of the graph and
+        sort them accordingly
+        :return:
+        """
+        self.clustering = dict(sorted(
+            networkx.clustering(self).items(),
+            key=lambda x: x[1],
+            reverse=True
+        ))
+
+    def __conn(self, verbose: bool = False):
+        """
+        Determine if the network is connected
+        :param verbose: if True prints the number of connected components
+        :return: None
+        """
+        self.is_connected = networkx.is_connected(self)
+        self.connected_components = networkx.number_connected_components(self)
+        if verbose:
+            print(
+                f'Found {self.connected_components: d} connected components.'
+            )
+
+    def __dia(self):
+        """
+        Calculate the diameter of the graph or the largest connected components
+        :return:
+        """
+        self.__conn(True)
+        if self.is_connected:
+            self.diameter = networkx.diameter(self)
+        else:
+            sub = self.component(in_place=False)
+            self.diameter = networkx.diameter(sub)
 
     def __hits(self):
         """
@@ -147,34 +178,32 @@ class GraphAnalyser(networkx.Graph):
             reverse=True
         ))
 
-    def __clu(self):
+    def __pmf(self, normalise: bool = True):
         """
-        Determine the clustering coefficient of every node of the graph and
-        sort them accordingly
+        Calculate the PMF of the degree distribution
+        :param normalise: If true the histogram is normalised to unity
         :return:
         """
-        self.clustering = dict(sorted(
-            networkx.clustering(self).items(),
-            key=lambda x: x[1],
-            reverse=True
-        ))
+        try:
+            self.pmf = numpy.array(
+                networkx.degree_histogram(self),
+                dtype=numpy.float
+            )
+            if normalise:
+                self.pmf /= self.pmf.sum()
+            self.binned_pmf = scipy
+        except (TypeError, ZeroDivisionError) as e:
+            print(f'Impossible to calculate PMF: {e}')
 
-    def __clo(self):
-        """
-        Determine the closeness of each node and sort them accordingly
-        :return:
-        """
-        self.closeness = dict(sorted(
-            networkx.closeness_centrality(self).items(),
-            key=lambda x: x[1],
-            reverse=True
-        ))
-
-    def component(self, idx: int = 0, in_place: bool = True):
+    def component(self,
+                  idx: int = 0,
+                  in_place: bool = True,
+                  analyse: bool = False):
         """
         Return the component referenced by the index
         :param idx: index of the component the graph in the component list.
         :param in_place: True if the subgraph operation must happen in place
+        :param analyse: True if the component must be analysed
         Default to the largest component.
         :return:
         """
@@ -190,25 +219,36 @@ class GraphAnalyser(networkx.Graph):
             for i, nset in enumerate(components_list):
                 if i != idx:
                     self.remove_nodes_from(nset)
-            self.analyse()
+            if analyse:
+                self.analyse()
         else:
-            sub: networkx.Graph = networkx.Graph(self)
+            sub: GraphAnalyser = deepcopy(self)
             return sub.subgraph(components_list[idx])
 
-    def analyse(self, normalised: bool = True):
+    def analyse(self, *args, **kwargs):
         """
         Analyse the graph and calculate the main statistics
+        :param args: variadic arguments
+        :param kwargs: variadic keyword arguments
         :return:
         """
-        self.__pmf(normalised)
-        self.__cdf()
-        self.__avg_deg()
-        self.__conn()
-        self.__hits()
-        self.__clu()
-        # self.__clo()
-        # self.diameter = networkx.diameter(self)
-        # self.__bet()
+        try:
+            mode = args[0]
+        except IndexError:
+            mode = 'all'
+
+        if mode == "degree":
+            try:
+                verbose = kwargs['verbose']
+            except KeyError:
+                verbose = False
+            self.__avg_deg(verbose)
+        elif mode == 'betweenness':
+            self.__bet()
+        elif mode == 'closeness':
+            self.__clo()
+        elif mode == 'clustering':
+            self.__clu()
 
     def attack(self, mode: str = 'random'):
         """
@@ -223,9 +263,11 @@ class GraphAnalyser(networkx.Graph):
         avg_k = []
         f = numpy.linspace(0, 1, self.number_of_nodes())
         nodes = None
+
+        print(f'Running attack in {mode} mode\n', file=sys.stderr)
         if mode == 'random':
             nodes = numpy.asarray(self.nodes)
-            numpy.random.seed(time())
+            numpy.random.seed(int(time()))
             numpy.random.shuffle(nodes)
         elif mode == 'betweenness':
             nodes = numpy.asarray(self.betweenness.keys())
@@ -238,11 +280,10 @@ class GraphAnalyser(networkx.Graph):
         else:
             raise ValueError("Unexpected attack mode!")
 
-        # TODO
-        # Remove every node in the order specified by the attack mode
         for node in nodes:
             try:
                 self.remove_node(node)
+                print(f'removing node: {node}')
             except networkx.NetworkXError:
                 continue
 
@@ -252,16 +293,16 @@ class GraphAnalyser(networkx.Graph):
         :param filename: The attributes to be loaded into the nodes
         :return:
         """
-        with open(filename, 'r') as attributes:
-            for line in attributes:
-                try:
+        try:
+            with open(filename, 'r') as attributes:
+                for line in attributes:
                     attr = line.split()
                     node = attr[0]
                     name = attr[1]
                     val = attr[2]
                     self.nodes[node][name] = val
-                except:
-                    print('Something went wrong!')
+        except FileNotFoundError:
+            print('File does not exist', file=sys.stderr)
 
     def power_fit(self):
         """

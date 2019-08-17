@@ -25,27 +25,8 @@
     <expand />
     <select />
   </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/graph_analytics.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="740">
-              <caret line="263" column="48" selection-start-line="263" selection-start-column="48" selection-end-line="263" selection-end-column="48" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/miniconda3/envs/GA/lib/python3.7/site-packages/networkx/classes/graph.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25695">
-              <caret line="1723" selection-start-line="1723" selection-end-line="1723" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+  <component name="FavoritesManager">
+    <favorites_list name="GrA-1718" />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -55,20 +36,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/assignment_01.py" />
-        <option value="$PROJECT_DIR$/graph_analytics.py" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="391" />
-    <option name="y" value="-9" />
-    <option name="width" value="882" />
-    <option name="height" value="1053" />
-  </component>
+  <component name="ProjectId" id="1OYveCEp2aMAeJuGaV2BLSsl0yA" />
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
       <profile-state>
@@ -87,17 +55,11 @@
     </entry>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes />
-  </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -174,7 +136,16 @@
       <workItem from="1563221348045" duration="1259000" />
       <workItem from="1563489468519" duration="3130000" />
       <workItem from="1563907901572" duration="4209000" />
-      <workItem from="1564080980202" duration="9099000" />
+      <workItem from="1564080980202" duration="9195000" />
+      <workItem from="1564167444710" duration="581000" />
+      <workItem from="1564168135174" duration="545000" />
+      <workItem from="1565537315991" duration="6046000" />
+      <workItem from="1565547792781" duration="617000" />
+      <workItem from="1565644329069" duration="5462000" />
+      <workItem from="1565737365914" duration="1424000" />
+      <workItem from="1565954387347" duration="9500000" />
+      <workItem from="1566027512133" duration="613000" />
+      <workItem from="1566031555291" duration="18294000" />
     </task>
     <task id="LOCAL-00001" summary="Analytics:&#10;First part completed. Main metrics included. To be reviewed and discuss if anything is missing by any chance.">
       <created>1557781108277</created>
@@ -211,45 +182,31 @@
       <option name="project" value="LOCAL" />
       <updated>1563493052209</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required.">
+      <created>1564103006439</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1564103006439</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
-  </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="125048000" />
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="-1" y="-22" width="1922" height="1079" extended-state="6" />
-    <editor active="true" />
-    <layout>
-      <window_info content_ui="combo" x="430" y="85" width="200" height="612" id="Project" order="0" weight="0.32922733" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.24956064" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3291536" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.3298969" />
-      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.4183124" side_tool="true" weight="0.47793326" />
-      <window_info anchor="bottom" x="0" y="295" width="1156" height="633" id="SciView" order="11" sideWeight="0.5816876" type="WINDOWED" weight="0.47793326" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="R Graphics" order="3" />
-      <window_info anchor="right" id="R Packages" order="4" />
-      <window_info anchor="right" id="Database" order="5" weight="0.32967034" />
-      <window_info anchor="right" x="0" y="0" width="96" height="853" id="Documentation" order="6" sideWeight="0.50545853" side_tool="true" visible="true" weight="0.46166134" />
-      <window_info anchor="right" id="PlantUML" order="7" />
-      <window_info anchor="right" auto_hide="true" x="950" y="76" width="970" height="970" id="Terminal" order="8" sideWeight="0.49924013" weight="0.456869" />
-      <window_info active="true" anchor="right" x="536" y="13" width="1371" height="296" id="Python Console" order="9" sideWeight="0.4945415" visible="true" weight="0.6152615" />
-    </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Analytics:&#10;First part completed. Main metrics included. To be reviewed and discuss if anything is missing by any chance." />
@@ -257,31 +214,7 @@
     <MESSAGE value="Reduction into components completed" />
     <MESSAGE value="TODO:&#10;Complete attack function to include different behaviours for the failure of the giant components" />
     <MESSAGE value="COMPONENT STUDY:&#10;Function updated to return a copy of the selected component if required.&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required." />
-    <option name="LAST_COMMIT_MESSAGE" value="COMPONENT STUDY:&#10;Function updated to return a copy of the selected component if required.&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required." />
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file:///usr/lib/python3/dist-packages/scipy/stats/_distn_infrastructure.py" />
-    <entry file="file://$USER_HOME$/miniconda3/envs/GA/lib/python3.7/site-packages/powerlaw.py" />
-    <entry file="file://$USER_HOME$/miniconda3/envs/GA/lib/python3.7/site-packages/networkx/classes/graphviews.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="86" selection-start-line="86" selection-end-line="86" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/graph_analytics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="740">
-          <caret line="263" column="48" selection-start-line="263" selection-start-column="48" selection-end-line="263" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/miniconda3/envs/GA/lib/python3.7/site-packages/networkx/classes/graph.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25695">
-          <caret line="1723" selection-start-line="1723" selection-end-line="1723" />
-        </state>
-      </provider>
-    </entry>
+    <MESSAGE value="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required." />
+    <option name="LAST_COMMIT_MESSAGE" value="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required." />
   </component>
 </project>
