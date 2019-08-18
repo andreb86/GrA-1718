@@ -53,12 +53,10 @@ class GraphAnalyser(networkx.Graph):
                     delimiter: str = kwargs['delimiter']
                 except KeyError:
                     delimiter: str = '\t'
-
                 with open(filename) as f:
                     edgelist = list(
                         map(lambda s: s.strip().split(delimiter), f.readlines())
                     )
-
                 self.add_edges_from(edgelist)
             except FileNotFoundError:
                 origin = args[0]
@@ -77,7 +75,7 @@ class GraphAnalyser(networkx.Graph):
         self.authorities = None
         self.diameter = 0
 
-    def __avg_deg(self, verbose: bool = False):
+    def __ave(self, verbose: bool = False):
         """
         Calculate the average degree
         :param verbose: Print the average degree if required
@@ -136,7 +134,7 @@ class GraphAnalyser(networkx.Graph):
             reverse=True
         ))
 
-    def __conn(self, verbose: bool = False):
+    def __con(self, verbose: bool = False):
         """
         Determine if the network is connected
         :param verbose: if True prints the number of connected components
@@ -154,14 +152,15 @@ class GraphAnalyser(networkx.Graph):
         Calculate the diameter of the graph or the largest connected components
         :return:
         """
-        self.__conn(True)
+        self.__con(True)
         if self.is_connected:
             self.diameter = networkx.diameter(self)
         else:
             sub = self.component(in_place=False)
             self.diameter = networkx.diameter(sub)
+        return self.diameter
 
-    def __hits(self):
+    def __hit(self):
         """
         Determine the hub and authority of each node in the graph and sort
         them based on their HITS score (hubs and authorities)
@@ -207,7 +206,7 @@ class GraphAnalyser(networkx.Graph):
         Default to the largest component.
         :return:
         """
-        self.__conn()
+        self.__con()
         if self.connected_components == 0:
             print("Please analyse graph first.", file=sys.stderr)
             raise ValueError
@@ -222,33 +221,59 @@ class GraphAnalyser(networkx.Graph):
             if analyse:
                 self.analyse()
         else:
-            sub: GraphAnalyser = deepcopy(self)
-            return sub.subgraph(components_list[idx])
+            return self.subgraph(components_list[idx])
+            # sub: GraphAnalyser = deepcopy(self)
+            # return sub.subgraph(components_list[idx])
 
     def analyse(self, *args, **kwargs):
         """
-        Analyse the graph and calculate the main statistics
+        Analyse the graph and calculate the main statistics as requested by
+        user. Use 'all' to calculate all of them (using the 'exclude' keyword as
+        appropriate.
         :param args: variadic arguments
         :param kwargs: variadic keyword arguments
         :return:
         """
+        analyses = {
+            'average degree':   self.__ave,
+            'betweenness':      self.__bet,
+            'CDF':              self.__cdf,
+            'clustering':       self.__clu,
+            'closeness':        self.__clo,
+            'connected':        self.__con,
+            'diameter':         self.__dia,
+            'hits':             self.__hit,
+            'PMF':              self.__pmf
+        }
+
         try:
             mode = args[0]
         except IndexError:
             mode = 'all'
 
-        if mode == "degree":
+        if mode == 'all':
             try:
-                verbose = kwargs['verbose']
+                excluded = kwargs['excluded']
+                print(f'Excluding from the analysis: {", ".join(excluded)}')
+                for key in excluded:
+                    try:
+                        analyses.pop(key)
+                    except KeyError:
+                        print(f'The following analysis is unavailable: {key}')
             except KeyError:
-                verbose = False
-            self.__avg_deg(verbose)
-        elif mode == 'betweenness':
-            self.__bet()
-        elif mode == 'closeness':
-            self.__clo()
-        elif mode == 'clustering':
-            self.__clu()
+                print('Complete analysis selected!\nThis might take a while...')
+            if len(args) > 1:
+                print('Additional arguments will be ignored...')
+            for key in analyses:
+                print(f'Executing {key} analysis...')
+                analyses[key]()
+        else:
+            for key in args:
+                try:
+                    print(f'Executing {key} analysis...')
+                    analyses[key]()
+                except KeyError:
+                    print(f'The following analysis is unavailable: {key}')
 
     def attack(self, mode: str = 'random'):
         """
@@ -303,17 +328,3 @@ class GraphAnalyser(networkx.Graph):
                     self.nodes[node][name] = val
         except FileNotFoundError:
             print('File does not exist', file=sys.stderr)
-
-    def power_fit(self):
-        """
-        Find approximate gamma and kmin values for the distribution
-        :return:
-        """
-        # k = numpy.arange(1, len(self.pmf))
-        # N = self.number_of_nodes()
-        # ln_k = numpy.log(k)
-        # ln_sum =
-        # deg = numpy.fromiter(dict(self.degree).values(), dtype=numpy.float)
-        # fit = powerlaw.Fit(deg)
-        # kmin = fit.xmin
-        # gamma = 1 + N / ()

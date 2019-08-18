@@ -145,7 +145,10 @@
       <workItem from="1565737365914" duration="1424000" />
       <workItem from="1565954387347" duration="9500000" />
       <workItem from="1566027512133" duration="613000" />
-      <workItem from="1566031555291" duration="18294000" />
+      <workItem from="1566031555291" duration="18319000" />
+      <workItem from="1566119649198" duration="1411000" />
+      <workItem from="1566123325480" duration="11774000" />
+      <workItem from="1566157155333" duration="7878000" />
     </task>
     <task id="LOCAL-00001" summary="Analytics:&#10;First part completed. Main metrics included. To be reviewed and discuss if anything is missing by any chance.">
       <created>1557781108277</created>
@@ -189,7 +192,14 @@
       <option name="project" value="LOCAL" />
       <updated>1564103006439</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required.">
+      <created>1566083416420</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1566083416420</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
