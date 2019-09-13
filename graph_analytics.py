@@ -86,6 +86,7 @@ class GraphAnalyser(networkx.Graph):
         self.average_degree = numpy.dot(k, hist) / self.number_of_nodes()
         if verbose:
             print(f'Average Degree: {self.average_degree: 6.2f}')
+        return self.average_degree
 
     def __bet(self):
         """
@@ -168,7 +169,8 @@ class GraphAnalyser(networkx.Graph):
         """
         tmp = networkx.hits(self)
         self.hubs = dict(sorted(
-            tmp[0].items(), key=lambda x: x[1],
+            tmp[0].items(),
+            key=lambda x: x[1],
             reverse=True
         ))
         self.authorities = dict(sorted(
@@ -201,7 +203,7 @@ class GraphAnalyser(networkx.Graph):
         """
         Return the component referenced by the index
         :param idx: index of the component the graph in the component list.
-        :param in_place: True if the subgraph operation must happen in place
+        :param in_place: True if the sub-graph operation must happen in place
         :param analyse: True if the component must be analysed
         Default to the largest component.
         :return:
@@ -228,10 +230,21 @@ class GraphAnalyser(networkx.Graph):
     def analyse(self, *args, **kwargs):
         """
         Analyse the graph and calculate the main statistics as requested by
-        user. Use 'all' to calculate all of them (using the 'exclude' keyword as
-        appropriate.
-        :param args: variadic arguments
-        :param kwargs: variadic keyword arguments
+        user. Use 'all' to calculate all of them. The 'exclude' keyword,
+        when used in combination with 'all' is used to provide a list of the
+        analyses to be excluded. Available analyses are:
+        1. average degree
+        2. betweenness
+        3. CDF (Cumulative Distribution Function)
+        4. clustering
+        5. closeness
+        6. connected
+        7. diameter
+        8. hits
+        9. PMF (Probability Mass Function)
+        :param args: analyses to be carried out
+        :param kwargs: use the 'exclude' keyword if needed, anything else
+        will be discarded.
         :return:
         """
         analyses = {
@@ -273,7 +286,10 @@ class GraphAnalyser(networkx.Graph):
                     print(f'Executing {key} analysis...')
                     analyses[key]()
                 except KeyError:
-                    print(f'The following analysis is unavailable: {key}')
+                    print(
+                        f'The following analysis is unavailable: {key}',
+                        file=sys.stderr
+                    )
 
     def attack(self, mode: str = 'random'):
         """
@@ -291,26 +307,32 @@ class GraphAnalyser(networkx.Graph):
 
         print(f'Running attack in {mode} mode\n', file=sys.stderr)
         if mode == 'random':
-            nodes = numpy.asarray(self.nodes)
+            nodes = numpy.asarray(self.nodes, dtype=numpy.str)
             numpy.random.seed(int(time()))
             numpy.random.shuffle(nodes)
         elif mode == 'betweenness':
-            nodes = numpy.asarray(self.betweenness.keys())
+            nodes = numpy.asarray(self.betweenness.keys(), dtype=numpy.str)
         elif mode == 'closeness':
-            nodes = numpy.asarray(self.closeness.keys())
+            nodes = numpy.asarray(self.closeness.keys(), dtype=numpy.str)
         elif mode == 'hubs':
-            nodes = numpy.asarray(self.hubs.keys())
+            nodes = numpy.asarray(self.hubs.keys(), dtype=numpy.str)
         elif mode == 'clustering':
-            nodes = numpy.asarray(self.clustering.keys())
+            nodes = numpy.asarray(self.clustering.keys(), dtype=numpy.str)
         else:
             raise ValueError("Unexpected attack mode!")
+        print(nodes)
 
-        for node in nodes:
+        while nodes.any():
             try:
+                node = nodes[0]
                 self.remove_node(node)
                 print(f'removing node: {node}')
+                avg_k.append(self.analyse('average degree'))
+                sizes.append(self.number_of_nodes())
+                nodes = numpy.delete(nodes, 0)
             except networkx.NetworkXError:
                 continue
+            return diam, sizes
 
     def load_attributes(self, filename: str):
         """
