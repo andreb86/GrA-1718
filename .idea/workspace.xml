@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="69be7218-6787-415a-a3ad-fbef47e50144" name="Default Changelist" comment="">
+    <list default="true" id="69be7218-6787-415a-a3ad-fbef47e50144" name="Default Changelist" comment="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the giant component as well,&#10;if required.&#10;&#10;Find a way to work with numpy arrays of string">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph_analytics.py" beforeDir="false" afterPath="$PROJECT_DIR$/graph_analytics.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -149,7 +148,8 @@
       <workItem from="1566119649198" duration="1411000" />
       <workItem from="1566123325480" duration="11774000" />
       <workItem from="1566157155333" duration="7878000" />
-      <workItem from="1568386270308" duration="9070000" />
+      <workItem from="1568386270308" duration="9394000" />
+      <workItem from="1568449003961" duration="296000" />
     </task>
     <task id="LOCAL-00001" summary="Analytics:&#10;First part completed. Main metrics included. To be reviewed and discuss if anything is missing by any chance.">
       <created>1557781108277</created>
@@ -200,7 +200,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566083416420</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the giant component as well,&#10;if required.&#10;&#10;Find a way to work with numpy arrays of string">
+      <created>1568413295732</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1568413295732</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -226,6 +233,7 @@
     <MESSAGE value="TODO:&#10;Complete attack function to include different behaviours for the failure of the giant components" />
     <MESSAGE value="COMPONENT STUDY:&#10;Function updated to return a copy of the selected component if required.&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required." />
     <MESSAGE value="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required." />
-    <option name="LAST_COMMIT_MESSAGE" value="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required." />
+    <MESSAGE value="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the giant component as well,&#10;if required.&#10;&#10;Find a way to work with numpy arrays of string" />
+    <option name="LAST_COMMIT_MESSAGE" value="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the giant component as well,&#10;if required.&#10;&#10;Find a way to work with numpy arrays of string" />
   </component>
 </project>
