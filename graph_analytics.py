@@ -34,8 +34,11 @@ class GraphAnalyser(networkx.Graph):
     def __init__(self, *args, **kwargs, ):
         """
         Initialise the graph as undirected/directed
-        :param args: variable parameter
-        :param kwargs: keyword arguments
+        :param args: If empty will generate an empty graph, otherwise it will
+        accept either an edgelist or another newtworkx.Graph or GraphAnalyser
+        (copy constructor)
+        :param kwargs: if an edgelist is provided use the 'delimiter' keyword to
+        provide the
         :param directed: boolean saying whether the graph is directed or not
         """
         networkx.Graph.__init__(self)
@@ -46,6 +49,7 @@ class GraphAnalyser(networkx.Graph):
                 'The number of arguments provided is wrong!',
                 file=sys.stderr
             )
+            sys.exit(-1)
         else:
             try:
                 filename: str = args[0]
@@ -58,7 +62,7 @@ class GraphAnalyser(networkx.Graph):
                         map(lambda s: s.strip().split(delimiter), f.readlines())
                     )
                 self.add_edges_from(edgelist)
-            except FileNotFoundError:
+            except (TypeError, FileNotFoundError):
                 origin = args[0]
                 self.add_edges_from(origin.edges)
 
@@ -94,10 +98,7 @@ class GraphAnalyser(networkx.Graph):
         :return:
         """
         self.betweenness = dict(sorted(
-            networkx.betweenness_centrality(
-                self,
-                normalized=True
-            ),
+            networkx.betweenness_centrality(self, normalized=True).items(),
             key=lambda x: x[1],
             reverse=True
         ))
@@ -307,32 +308,33 @@ class GraphAnalyser(networkx.Graph):
 
         print(f'Running attack in {mode} mode\n', file=sys.stderr)
         if mode == 'random':
-            nodes = numpy.asarray(self.nodes, dtype=numpy.str)
-            numpy.random.seed(int(time()))
-            numpy.random.shuffle(nodes)
+            nodes = list(self.nodes)
+            random.seed(int(time()))
+            random.shuffle(nodes)
         elif mode == 'betweenness':
-            nodes = numpy.asarray(self.betweenness.keys(), dtype=numpy.str)
+            nodes = list(self.betweenness.keys())
         elif mode == 'closeness':
-            nodes = numpy.asarray(self.closeness.keys(), dtype=numpy.str)
+            nodes = list(self.closeness.keys())
         elif mode == 'hubs':
-            nodes = numpy.asarray(self.hubs.keys(), dtype=numpy.str)
+            nodes = list(self.hubs.keys())
         elif mode == 'clustering':
-            nodes = numpy.asarray(self.clustering.keys(), dtype=numpy.str)
+            nodes = list(self.clustering.keys())
         else:
             raise ValueError("Unexpected attack mode!")
-        print(nodes)
 
-        while nodes.any():
+        while len(nodes) > 1:
             try:
                 node = nodes[0]
                 self.remove_node(node)
                 print(f'removing node: {node}')
-                avg_k.append(self.analyse('average degree'))
+                self.analyse('average degree')
+                avg_k.append(self.average_degree)
                 sizes.append(self.number_of_nodes())
-                nodes = numpy.delete(nodes, 0)
+                nodes.pop(0)
+                print(nodes)
             except networkx.NetworkXError:
-                continue
-            return diam, sizes
+                break
+        return avg_k, diam, sizes
 
     def load_attributes(self, filename: str):
         """
