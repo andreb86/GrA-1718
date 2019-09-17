@@ -151,7 +151,9 @@
       <workItem from="1566157155333" duration="7878000" />
       <workItem from="1568386270308" duration="9394000" />
       <workItem from="1568449003961" duration="5848000" />
-      <workItem from="1568557333906" duration="6264000" />
+      <workItem from="1568557333906" duration="6540000" />
+      <workItem from="1568654699163" duration="4098000" />
+      <workItem from="1568749708427" duration="3320000" />
     </task>
     <task id="LOCAL-00001" summary="Analytics:&#10;First part completed. Main metrics included. To be reviewed and discuss if anything is missing by any chance.">
       <created>1557781108277</created>
@@ -216,7 +218,14 @@
       <option name="project" value="LOCAL" />
       <updated>1568449326777</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="#TODO&#10;Find a clever way to load attributes from file or generate them at&#10;random or according to a certain criteria.&#10;Reading them from file is not enough as they cannot be given one by one&#10;by hand.">
+      <created>1568577341504</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1568577341504</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -243,6 +252,7 @@
     <MESSAGE value="COMPONENT STUDY:&#10;Function updated to return a copy of the selected component if required.&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required." />
     <MESSAGE value="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required." />
     <MESSAGE value="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the giant component as well,&#10;if required.&#10;&#10;Find a way to work with numpy arrays of string" />
-    <option name="LAST_COMMIT_MESSAGE" value="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the giant component as well,&#10;if required.&#10;&#10;Find a way to work with numpy arrays of string" />
+    <MESSAGE value="#TODO&#10;Find a clever way to load attributes from file or generate them at&#10;random or according to a certain criteria.&#10;Reading them from file is not enough as they cannot be given one by one&#10;by hand." />
+    <option name="LAST_COMMIT_MESSAGE" value="#TODO&#10;Find a clever way to load attributes from file or generate them at&#10;random or according to a certain criteria.&#10;Reading them from file is not enough as they cannot be given one by one&#10;by hand." />
   </component>
 </project>

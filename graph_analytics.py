@@ -78,6 +78,7 @@ class GraphAnalyser(networkx.Graph):
         self.hubs = None
         self.authorities = None
         self.diameter = 0
+        self.threshold = 0
 
     def __ave(self, verbose: bool = False):
         """
@@ -249,15 +250,15 @@ class GraphAnalyser(networkx.Graph):
         :return:
         """
         analyses = {
-            'average degree':   self.__ave,
-            'betweenness':      self.__bet,
-            'CDF':              self.__cdf,
-            'clustering':       self.__clu,
-            'closeness':        self.__clo,
-            'connected':        self.__con,
-            'diameter':         self.__dia,
-            'hits':             self.__hit,
-            'PMF':              self.__pmf
+            'average degree': self.__ave,
+            'betweenness': self.__bet,
+            'CDF': self.__cdf,
+            'clustering': self.__clu,
+            'closeness': self.__clo,
+            'connected': self.__con,
+            'diameter': self.__dia,
+            'hits': self.__hit,
+            'PMF': self.__pmf
         }
 
         try:
@@ -336,19 +337,28 @@ class GraphAnalyser(networkx.Graph):
                 break
         return avg_k, diam, sizes
 
-    def load_attributes(self, filename: str):
+    def social_contagion(self, a: float, b: float, mode: str, infected: int):
         """
-        Load the nodes attributes for the contagion
-        :param filename: The attributes to be loaded into the nodes
+        Get the values of the nodes attributes for social contagion based on
+        the initial distribution mode
+        :param a: payoff for the nodes adopting behaviour 'a'
+        :param b: payoff for the nodes adopting behaviour 'b'
+        :param mode: the distribution of contagion at t=0
+        :param infected: the number of infected nodes
         :return:
         """
-        try:
-            with open(filename, 'r') as attributes:
-                for line in attributes:
-                    attr = line.split()
-                    node = attr[0]
-                    name = attr[1]
-                    val = attr[2]
-                    self.nodes[node][name] = val
-        except FileNotFoundError:
-            print('File does not exist', file=sys.stderr)
+
+        self.threshold = b / (a + b)
+        nodes = None
+        if mode == 'random':
+            nodes = list(self.nodes)
+            random.seed(int(time()))
+            random.shuffle(nodes)
+            nodes = nodes[:infected]
+        # TODO Insert additional baseline contagion layout
+        for node in self:
+            if nodes in nodes:
+                self.nodes[node]['a'] = a
+            else:
+                self.nodes[node]['b'] = b
+        # TODO start the assessment of the contagion step by step
