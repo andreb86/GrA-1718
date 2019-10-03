@@ -362,3 +362,5 @@ class GraphAnalyser(networkx.Graph):
             else:
                 self.nodes[node]['b'] = b
         # TODO start the assessment of the contagion step by step
+
+

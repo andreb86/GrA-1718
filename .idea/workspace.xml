@@ -153,7 +153,8 @@
       <workItem from="1568449003961" duration="5848000" />
       <workItem from="1568557333906" duration="6540000" />
       <workItem from="1568654699163" duration="4098000" />
-      <workItem from="1568749708427" duration="3320000" />
+      <workItem from="1568749708427" duration="3411000" />
+      <workItem from="1569161204897" duration="7955000" />
     </task>
     <task id="LOCAL-00001" summary="Analytics:&#10;First part completed. Main metrics included. To be reviewed and discuss if anything is missing by any chance.">
       <created>1557781108277</created>
@@ -225,7 +226,14 @@
       <option name="project" value="LOCAL" />
       <updated>1568577341504</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="#TODO&#10;Try again distribution fitting.&#10;Add different baseline scenarios for the contagion&#10;Start the step by step contagion">
+      <created>1568755111996</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1568755111996</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -253,6 +261,7 @@
     <MESSAGE value="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the gian component as well if required." />
     <MESSAGE value="Started the contagion&#10;&#10;TODO:&#10;Update the attack function to study the giant component as well,&#10;if required.&#10;&#10;Find a way to work with numpy arrays of string" />
     <MESSAGE value="#TODO&#10;Find a clever way to load attributes from file or generate them at&#10;random or according to a certain criteria.&#10;Reading them from file is not enough as they cannot be given one by one&#10;by hand." />
-    <option name="LAST_COMMIT_MESSAGE" value="#TODO&#10;Find a clever way to load attributes from file or generate them at&#10;random or according to a certain criteria.&#10;Reading them from file is not enough as they cannot be given one by one&#10;by hand." />
+    <MESSAGE value="#TODO&#10;Try again distribution fitting.&#10;Add different baseline scenarios for the contagion&#10;Start the step by step contagion" />
+    <option name="LAST_COMMIT_MESSAGE" value="#TODO&#10;Try again distribution fitting.&#10;Add different baseline scenarios for the contagion&#10;Start the step by step contagion" />
   </component>
 </project>
