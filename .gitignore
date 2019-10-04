@@ -124,3 +124,5 @@ dmypy.json
 
 # IDEA
 .idea
+.vscode
+.ipynb_checkpoints

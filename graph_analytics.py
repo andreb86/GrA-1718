@@ -349,18 +349,40 @@ class GraphAnalyser(networkx.Graph):
         """
 
         self.threshold = b / (a + b)
-        nodes = None
+        infected_nodes = None
         if mode == 'random':
-            nodes = list(self.nodes)
+            infected_nodes = list(self.nodes)
             random.seed(int(time()))
-            random.shuffle(nodes)
-            nodes = nodes[:infected]
+            random.shuffle(infected_nodes)
+            infected_nodes = infected_nodes[:infected]
         # TODO Insert additional baseline contagion layout
+        
         for node in self:
-            if nodes in nodes:
-                self.nodes[node]['a'] = a
+            if node in infected_nodes:
+                self.infected_nodes[node]['a'] = a
             else:
-                self.nodes[node]['b'] = b
+                self.infected_nodes[node]['b'] = b
         # TODO start the assessment of the contagion step by step
+        flag = True
+        while flag:
+            flag = False
+            suscepitibles = set()
+            for infected_node in infected_nodes:
+                neighbours = [n for n in infected_node.neighbours if n['b'] == b]
+                suscepitibles.add(neighbours)
 
+            for v in suscepitibles:
+                d = v.neighbours
+                infected_neighbours = 0
+                for n in d:
+                    if n['a'] == a:
+                        infected_neighbours += 1
+                p = infected_neighbours / len(d)
+                if p >= self.threshold:
+                    del v['b']
+                    v['a'] = a
+                    flag = True
+            
+            # TODO plot the graph status against contagion
 
+# TODO implement function to plot min characteristics of the graph
