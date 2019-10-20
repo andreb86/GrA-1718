@@ -70,15 +70,15 @@ class GraphAnalyser(networkx.Graph):
         self.binned_pmf = None
         self.cdf = None
         self.fit = None
-        self.average_degree = 0
-        self.connected_components = 0
+        self.average_degree = None
+        self.connected_components = None
         self.is_connected = False
-        self.diameter = 0
+        self.diameter = None
         self.betweenness = None
         self.hubs = None
         self.authorities = None
-        self.diameter = 0
-        self.threshold = 0
+        self.diameter = None
+        self.threshold = None
 
     def __ave(self, verbose: bool = False):
         """
@@ -194,7 +194,6 @@ class GraphAnalyser(networkx.Graph):
             )
             if normalise:
                 self.pmf /= self.pmf.sum()
-            self.binned_pmf = scipy
         except (TypeError, ZeroDivisionError) as e:
             print(f'Impossible to calculate PMF: {e}')
 
@@ -362,16 +361,17 @@ class GraphAnalyser(networkx.Graph):
                 self.infected_nodes[node]['a'] = a
             else:
                 self.infected_nodes[node]['b'] = b
-        # TODO start the assessment of the contagion step by step
         flag = True
         while flag:
             flag = False
-            suscepitibles = set()
+            susceptibles = set()
             for infected_node in infected_nodes:
-                neighbours = [n for n in infected_node.neighbours if n['b'] == b]
-                suscepitibles.add(neighbours)
+                neighbours = [
+                    n for n in infected_node.neighbours if n['b'] == b
+                ]
+                susceptibles.add(neighbours)
 
-            for v in suscepitibles:
+            for v in susceptibles:
                 d = v.neighbours
                 infected_neighbours = 0
                 for n in d:
@@ -385,4 +385,91 @@ class GraphAnalyser(networkx.Graph):
             
             # TODO plot the graph status against contagion
 
-# TODO implement function to plot min characteristics of the graph
+    def plot(self, metric: str, **kwargs):
+        """
+        Plot different metrics of the graph or the graph itself.
+        :param metric: the metric of graph that is going to be shown
+        :param kwargs: specify the markers and the plot type
+        """
+        if metric == "graph":
+            try:
+                plot_type = kwargs["type"]
+                index = "draw_" + plot_type
+                plot_fun = networkx.drawing.__dict__[index]
+            except KeyError:
+                plot_fun = networkx.draw
+
+            node_color_map = []
+            try:
+                contagion = kwargs["contagion"]
+                if contagion:
+                    for n in self:
+                        if 'a' in self.node[n].keys():
+                            node_color_map.append("red")
+                        else:
+                            node_color_map.append("blue")
+            except KeyError:
+                pass
+
+            if len(node_color_map):
+                plot_fun(self, node_color_map)
+            else:
+                plot_fun(self)
+
+        elif metric == "PMF":
+            try:
+                plot_type = kwargs["type"]
+                if plot_type == "loglog":
+                    plot_fun = matplotlib.pyplot.loglog
+                elif plot_type == "semilogx":
+                    plot_fun = matplotlib.pyplot.semilogx
+                elif plot_type == "semilogy":
+                    plot_fun = matplotlib.pyplot.semilogy
+            except KeyError:
+                plot_fun = matplotlib.pyplot.plot
+
+            plot_fun(
+                list(range(len(networkx.degree_histogram(self)))),
+                self.pmf,
+                "+r"
+            )
+
+        elif metric == "CDF":
+            try:
+                plot_type = kwargs["type"]
+                if plot_type == "loglog":
+                    plot_fun = matplotlib.pyplot.loglog
+                elif plot_type == "semilogx":
+                    plot_fun = matplotlib.pyplot.semilogx
+                elif plot_type == "semilogy":
+                    plot_fun = matplotlib.pyplot.semilogy
+            except KeyError:
+                plot_fun = matplotlib.pyplot.plot
+
+            plot_fun(
+                list(range(len(networkx.degree_histogram(self)))),
+                self.cdf,
+                "b."
+            )
+
+    def power_fit(self):
+        """
+        Fit the degree distribution with a power law
+        :return:
+        """
+
+        try:
+
+            # Create a binned distribution.
+            k_max = len(self.pmf) - 1
+        except TypeError:
+            self.analyse("PMF")
+            k_max = len(self.pmf) - 1
+
+        k = numpy.arange(1, k_max + 1, 1, numpy.float)
+        n = self.number_of_nodes()
+        d_max = 99999
+
+        for _K in k:
+            gamma = 1 + n / (sum(numpy.log(k)) - n * numpy.log(_K - .5))
+
