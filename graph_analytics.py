@@ -225,8 +225,6 @@ class GraphAnalyser(networkx.Graph):
                 self.analyse()
         else:
             return self.subgraph(components_list[idx])
-            # sub: GraphAnalyser = deepcopy(self)
-            # return sub.subgraph(components_list[idx])
 
     def analyse(self, *args, **kwargs):
         """
@@ -251,13 +249,13 @@ class GraphAnalyser(networkx.Graph):
         analyses = {
             'average degree': self.__ave,
             'betweenness': self.__bet,
-            'CDF': self.__cdf,
+            'cdf': self.__cdf,
             'clustering': self.__clu,
             'closeness': self.__clo,
             'connected': self.__con,
             'diameter': self.__dia,
             'hits': self.__hit,
-            'PMF': self.__pmf
+            'pmf': self.__pmf
         }
 
         try:
@@ -355,7 +353,7 @@ class GraphAnalyser(networkx.Graph):
             random.shuffle(infected_nodes)
             infected_nodes = infected_nodes[:infected]
         # TODO Insert additional baseline contagion layout
-        
+
         for node in self:
             if node in infected_nodes:
                 self.infected_nodes[node]['a'] = a
@@ -364,14 +362,14 @@ class GraphAnalyser(networkx.Graph):
         flag = True
         while flag:
             flag = False
-            susceptibles = set()
+            susceptible = set()
             for infected_node in infected_nodes:
                 neighbours = [
                     n for n in infected_node.neighbours if n['b'] == b
                 ]
-                susceptibles.add(neighbours)
+                susceptible.add(neighbours)
 
-            for v in susceptibles:
+            for v in susceptible:
                 d = v.neighbours
                 infected_neighbours = 0
                 for n in d:
@@ -382,22 +380,24 @@ class GraphAnalyser(networkx.Graph):
                     del v['b']
                     v['a'] = a
                     flag = True
-            
+
             # TODO plot the graph status against contagion
 
-    def plot(self, metric: str, **kwargs):
+    def plot(self, metric: str = "", **kwargs):
         """
-        Plot different metrics of the graph or the graph itself.
+        Plot the graph or different metrics.
         :param metric: the metric of graph that is going to be shown
         :param kwargs: specify the markers and the plot type
         """
-        if metric == "graph":
+        metric = metric.lower()
+        print(metric)
+        if metric == "graph" or metric == "":
             try:
-                plot_type = kwargs["type"]
-                index = "draw_" + plot_type
-                plot_fun = networkx.drawing.__dict__[index]
+                type_ = kwargs["type"]
+                index = "draw_" + type_
+                plt_ = networkx.drawing.__dict__[index]
             except KeyError:
-                plot_fun = networkx.draw
+                plt_ = networkx.draw
 
             node_color_map = []
             try:
@@ -412,45 +412,39 @@ class GraphAnalyser(networkx.Graph):
                 pass
 
             if len(node_color_map):
-                plot_fun(self, node_color_map)
+                plt_(self, node_color_map)
             else:
-                plot_fun(self)
+                plt_(self)
 
-        elif metric == "PMF":
+        else:
             try:
-                plot_type = kwargs["type"]
-                if plot_type == "loglog":
-                    plot_fun = matplotlib.pyplot.loglog
-                elif plot_type == "semilogx":
-                    plot_fun = matplotlib.pyplot.semilogx
-                elif plot_type == "semilogy":
-                    plot_fun = matplotlib.pyplot.semilogy
+                type_ = kwargs["type"]
             except KeyError:
-                plot_fun = matplotlib.pyplot.plot
+                type_ = "plot"
 
-            plot_fun(
-                list(range(len(networkx.degree_histogram(self)))),
-                self.pmf,
-                "+r"
-            )
-
-        elif metric == "CDF":
             try:
-                plot_type = kwargs["type"]
-                if plot_type == "loglog":
-                    plot_fun = matplotlib.pyplot.loglog
-                elif plot_type == "semilogx":
-                    plot_fun = matplotlib.pyplot.semilogx
-                elif plot_type == "semilogy":
-                    plot_fun = matplotlib.pyplot.semilogy
+                marker_ = kwargs["marker"]
             except KeyError:
-                plot_fun = matplotlib.pyplot.plot
+                marker_ = 'b+'
 
-            plot_fun(
-                list(range(len(networkx.degree_histogram(self)))),
-                self.cdf,
-                "b."
-            )
+            try:
+                plt_ = matplotlib.pyplot.__dict__[type_]
+            except KeyError:
+                plt_ = matplotlib.pyplot.plot
+
+            try:
+                feature_ = self.__getattribute__(metric)
+            except AttributeError as ae:
+                print(f'Impossible to calculate {metric}: {ae}')
+            print(feature_ is None)
+            if feature_ is None:
+                self.analyse(metric)
+                feature_ = self.__getattribute__(metric)
+
+            k_ = numpy.arange(len(feature_))
+            plt_(k_, feature_, marker_)
+
+        matplotlib.pyplot.show()
 
     def power_fit(self):
         """
@@ -472,4 +466,3 @@ class GraphAnalyser(networkx.Graph):
 
         for _K in k:
             gamma = 1 + n / (sum(numpy.log(k)) - n * numpy.log(_K - .5))
-
