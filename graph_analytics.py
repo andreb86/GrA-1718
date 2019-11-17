@@ -12,6 +12,7 @@ try:
     # import powerlaw
     import random
     import scipy
+    import warnings
     from itertools import accumulate
     from scipy.special import zeta
     from scipy.stats import powerlaw
@@ -67,7 +68,9 @@ class GraphAnalyser(networkx.Graph):
                 self.add_edges_from(origin.edges)
 
         self.pmf = None
+        self.deg = None
         self.binned_pmf = None
+        self.binned_deg = None
         self.cdf = None
         self.fit = None
         self.average_degree = None
@@ -80,23 +83,20 @@ class GraphAnalyser(networkx.Graph):
         self.diameter = None
         self.threshold = None
 
-    def __ave(self, verbose: bool = False):
+    def __ave(self) -> float:
         """
         Calculate the average degree
-        :param verbose: Print the average degree if required
-        :return:
+        :return: The average degree of the graph
         """
         hist = networkx.degree_histogram(self)
         k = numpy.arange(len(hist))
         self.average_degree = numpy.dot(k, hist) / self.number_of_nodes()
-        if verbose:
-            print(f'Average Degree: {self.average_degree: 6.2f}')
         return self.average_degree
 
     def __bet(self):
         """
         Calculate the betweenness of the graph
-        :return:
+        :return: None
         """
         self.betweenness = dict(sorted(
             networkx.betweenness_centrality(self, normalized=True).items(),
@@ -107,7 +107,7 @@ class GraphAnalyser(networkx.Graph):
     def __cdf(self):
         """
         Calculate the CDF of the degree distribution
-        :return:
+        :return: None
         """
         try:
             self.cdf = numpy.fromiter(accumulate(self.pmf), dtype=numpy.float)
@@ -117,7 +117,7 @@ class GraphAnalyser(networkx.Graph):
     def __clo(self):
         """
         Determine the closeness of each node and sort them accordingly
-        :return:
+        :return: None
         """
         self.closeness = dict(sorted(
             networkx.closeness_centrality(self).items(),
@@ -129,7 +129,7 @@ class GraphAnalyser(networkx.Graph):
         """
         Determine the clustering coefficient of every node of the graph and
         sort them accordingly
-        :return:
+        :return: None
         """
         self.clustering = dict(sorted(
             networkx.clustering(self).items(),
@@ -137,23 +137,20 @@ class GraphAnalyser(networkx.Graph):
             reverse=True
         ))
 
-    def __con(self, verbose: bool = False):
+    def __con(self) -> int:
         """
         Determine if the network is connected
         :param verbose: if True prints the number of connected components
-        :return: None
+        :return: The number of connected components
         """
         self.is_connected = networkx.is_connected(self)
         self.connected_components = networkx.number_connected_components(self)
-        if verbose:
-            print(
-                f'Found {self.connected_components: d} connected components.'
-            )
+        return self.connected_components
 
-    def __dia(self):
+    def __dia(self) -> float:
         """
         Calculate the diameter of the graph or the largest connected components
-        :return:
+        :return: The diameter of the graph
         """
         self.__con(True)
         if self.is_connected:
@@ -167,7 +164,7 @@ class GraphAnalyser(networkx.Graph):
         """
         Determine the hub and authority of each node in the graph and sort
         them based on their HITS score (hubs and authorities)
-        :return:
+        :return: None
         """
         tmp = networkx.hits(self)
         self.hubs = dict(sorted(
@@ -181,26 +178,59 @@ class GraphAnalyser(networkx.Graph):
             reverse=True
         ))
 
-    def __pmf(self, normalise: bool = True):
+    def __pmf(self, base: int = 2):
         """
-        Calculate the PMF of the degree distribution
-        :param normalise: If true the histogram is normalised to unity
-        :return:
+        Calculate the normalised PMF of the degree distribution
+        :param base: base used for the log binning (Default to 2)
+        :return: None
         """
         try:
+            deg = [d for _, d in self.degree]
+            n = self.number_of_nodes()
             self.pmf = numpy.array(
                 networkx.degree_histogram(self),
-                dtype=numpy.float
+                dtype=numpy.int
             )
-            if normalise:
-                self.pmf /= self.pmf.sum()
+            self.deg = numpy.nonzero(self.pmf)[0]
+            self.pmf = self.pmf[self.deg]
+            if base == 1:
+                warnings.warn(
+                    "A base of 1 will void any binning effort",
+                    RuntimeWarning
+                )
+                self.binned_pmf = self.pmf
+                self.binned_deg = self.deg
+            else:
+                edges = int(numpy.ceil(scipy.logn(base, max(self.deg)) + 1))
+                self.binned_deg = numpy.zeros(edges, dtype=numpy.float64)
+                deg_sums = numpy.zeros(edges, dtype=numpy.float64)
+                bins = numpy.logspace(0, edges - 1, edges, base=base)
+                self.binned_pmf, _ = numpy.histogram(deg, bins)
+                non_empty_bins = numpy.nonzero(self.binned_pmf)[0]
+
+                for k, p in zip(self.deg, self.pmf):
+                    idx = int(scipy.logn(base, k))
+                    deg_sums[idx] += p
+                    self.binned_deg[idx] += p * k
+
+            self.binned_pmf = self.binned_pmf[non_empty_bins]
+            self.binned_deg = self.binned_deg[non_empty_bins]
+
+            self.binned_deg = self.binned_deg / self.binned_pmf
+            self.binned_pmf = self.binned_pmf / (base ** non_empty_bins)
+
+            self.pmf = self.pmf / n
+            self.binned_pmf = self.binned_pmf / n
+
         except (TypeError, ZeroDivisionError) as e:
             print(f'Impossible to calculate PMF: {e}')
 
-    def component(self,
-                  idx: int = 0,
-                  in_place: bool = True,
-                  analyse: bool = False):
+    def component(
+            self,
+            idx: int = 0,
+            in_place: bool = True,
+            analyse: bool = False
+    ):
         """
         Return the component referenced by the index
         :param idx: index of the component the graph in the component list.
@@ -274,8 +304,13 @@ class GraphAnalyser(networkx.Graph):
                         print(f'The following analysis is unavailable: {key}')
             except KeyError:
                 print('Complete analysis selected!\nThis might take a while...')
+
             if len(args) > 1:
-                print('Additional arguments will be ignored...')
+                warnings.warn(
+                    "Additional arguments will be ignored!",
+                    RuntimeWarning
+                )
+
             for key in analyses:
                 print(f'Executing {key} analysis...')
                 analyses[key]()
@@ -443,7 +478,6 @@ class GraphAnalyser(networkx.Graph):
 
             k_ = numpy.arange(len(feature_))
             plt_(k_, feature_, marker_)
-
         matplotlib.pyplot.show()
 
     def power_fit(self):
