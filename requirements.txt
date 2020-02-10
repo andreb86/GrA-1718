@@ -1,0 +1,11 @@
+matplotlib
+networkx
+numpy
+powerlaw
+scipy
+pydot
+graphviz
+wheel
+tornado
+ipykernel
+

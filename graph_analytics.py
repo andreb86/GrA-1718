@@ -246,6 +246,13 @@ def correlation(graph: networkx.Graph):
 def assortativity(graph: networkx.Graph):
     return networkx.correlation.degree_assortativity_coefficient(graph)
 
+def connected_component_subgraphs(G: networkx.Graph):
+    for c in networkx.connected_components(G):
+        yield G.subgraph(c)
+def giant_component_size(G: networkx.Graph):
+    return len(sorted(connected_component_subgraphs(G), key=len, reverse=True)[0])
+
+
 
 if __name__ == 'main':
     ga = argparse.ArgumentParser()
