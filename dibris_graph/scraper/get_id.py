@@ -31,7 +31,7 @@ for line in Lines:
 Scraping connection
 '''
 # Lista dell adiacenze su cui vado a scrivere
-adj_list = open("adjacent_list.txt", "r+")
+adj_list = open("adjacent_list.txt", "a")
 
 
 # Prendo tutti gli autori
