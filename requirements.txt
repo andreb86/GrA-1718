@@ -10,3 +10,4 @@ tornado
 ipykernel
 jupyter
 git+git://github.com/Killuaa27/scholarly.git
+pandoc
